@@ -33,8 +33,9 @@ pip install -r requirements.txt
 ## 交付成果
 - `ARIA.ipynb` - 完整分析筆記本
 - `shelter_risk_audit.json` - 避難所風險分類
-- `risk_map.html` - 互動式風險地圖
-- `risk_chart.png` - 高風險區域前10名圖表
+- `risk_map.png` - 靜態風險地圖或統計圖
+- `interactive_map.zip` - 互動式風險地圖（壓縮檔）
+- `interactive_map_info.txt` - 互動式地圖使用說明
 
 ## AI 診斷日誌
 
