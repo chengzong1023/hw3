@@ -26,7 +26,8 @@ pip install -r requirements.txt
 ## 主要功能
 - **多級風險區域**：500公尺（高）、1公里（中）、2公里（低）緩衝區
 - **空間分析**：使用 `gpd.sjoin()` 識別風險區內的避難所
-- **收容量缺口分析**：識別安全避難所收容量不足的行政區
+- **收容量缺口分析**：完整實作安全避難所總收容量 vs 風險區需求分析，包含容量缺口比率計算
+- **綜合風險評分**：基於風險等級、避難所數量和容量缺口的加權評分系統
 - **互動式視覺化**：使用 Folium 製作依風險等級著色的地圖
 - **自動化報告**：匯出避難所風險評估 JSON 檔案
 
@@ -34,6 +35,7 @@ pip install -r requirements.txt
 - `ARIA.ipynb` - 完整分析筆記本
 - `shelter_risk_audit.json` - 避難所風險分類
 - `risk_map.png` - 靜態風險地圖或統計圖
+- `top_10_risk_areas.csv` - 詳細收容量缺口分析
 - `interactive_map.zip` - 互動式風險地圖（壓縮檔）
 - `interactive_map_info.txt` - 互動式地圖使用說明
 
