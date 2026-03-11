@@ -32,13 +32,19 @@ wheels/
 river_data/
 data/
 
-# Output files
+# Output files (except deliverables)
 *.html
+temp_files/*.html
 *.png
+temp_files/*.png
 *.json
-risk_map.*
-risk_chart.*
-shelter_risk_audit.*
+temp_files/*.json
+
+# Deliverables folder - allow these files
+!deliverables/risk_map.png
+!deliverables/shelter_risk_audit.json
+!deliverables/*.png
+!deliverables/*.json
 
 # IDE
 .vscode/
