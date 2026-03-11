@@ -71,11 +71,83 @@ for root, dirs, files in os.walk('river_data'):
 **問題**：PowerShell 不支援像 bash 的 `&&` 運算子
 **解決方案**：使用分開的指令或正確的 PowerShell 語法
 
+#### 問題4：互動式地圖座標範圍錯誤
+**問題**：互動式地圖顯示不在台灣範圍，座標計算錯誤
+**解決方案**：重新計算台灣中心點（緯度 23.8, 經度 120.5），檢查座標範圍合理性
+**程式碼修正**：
+```python
+# 設定正確的台灣中心點
+center_lat = 23.8
+center_lon = 120.5
+
+# 檢查座標範圍
+if not (119 <= lon <= 122 and 21 <= lat <= 26):
+    continue  # 跳過異常座標
+```
+
+#### 問題5：避難所收容人數資料遺失
+**問題**：CSV 轉換到 GeoJSON 時，`可容納人數` 欄位遺失，圖表顯示「資料不可用」
+**解決方案**：重新轉換 CSV 到 GeoJSON，確保收容人數欄位正確傳遞
+**程式碼修正**：
+```python
+# 檢查收容人數欄位
+capacity_col = None
+for col in shelters.columns:
+    if '容納人數' in str(col) or 'capacity' in str(col).lower():
+        capacity_col = col
+        break
+
+# 確保欄位存在於 GeoJSON
+if capacity_col:
+    shelters_gdf[capacity_col] = shelters_csv[capacity_col]
+```
+
+#### 問題6：彈出式資訊不完整
+**問題**：點擊避難所時，彈出式資訊缺少收容人數等詳細資料
+**解決方案**：重新設計彈出式視窗，使用表格格式顯示完整資訊
+**程式碼修正**：
+```python
+popup_info = f"""
+<div style="width: 250px;">
+<h4 style="color: {color}; margin-bottom: 10px;">避難所資訊</h4>
+<table style="border-collapse: collapse; width: 100%;">
+<tr><td style="font-weight: bold; padding: 5px;">風險等級：</td><td style="padding: 5px;">{risk_labels.get(risk_level, '未知')}</td></tr>
+<tr><td style="font-weight: bold; padding: 5px;">名稱：</td><td style="padding: 5px;">{shelter['避難所名稱']}</td></tr>
+<tr><td style="font-weight: bold; padding: 5px;">收容人數：</td><td style="padding: 5px;">{int(shelter[capacity_col])} 人</td></tr>
+</table>
+</div>
+"""
+```
+
+#### 問題7：Unicode 編碼錯誤
+**問題**：Python 輸出中文時出現 `UnicodeEncodeError`
+**解決方案**：移除輸出中的特殊 Unicode 字符，使用純 ASCII 字符
+**程式碼修正**：
+```python
+# 避免使用 ✅ ❌ 等特殊字符
+print("OK" if condition else "MISSING")
+print("完成" if success else "失敗")
+```
+
+#### 問題8：GitHub 推送大檔案警告
+**問題**：`townships_3826.geojson` (57.90 MB) 超過 GitHub 建議的 50MB 限制
+**解決方案**：檔案已成功推送，但建議未來使用 Git LFS 處理大檔案
+**建議**：
+```bash
+# 未來可考慮使用 Git LFS
+git lfs track "*.geojson"
+git add .gitattributes
+```
+
 ### 學到的教訓
 - 在完整整合前，先用簡單腳本測試資料來源
 - 政府 API 可能會回傳需要解壓縮的 zip 檔案
 - 座標系統驗證至關重要（台灣使用 EPSG:3826）
 - 空間分析前資料清理是必要的 - 移除無效座標
+- 資料轉換過程中要確保關鍵欄位不遺失
+- 互動式地圖需要仔細檢查座標範圍和中心點
+- 彈出式資訊要包含使用者需要的完整資訊
+- 編碼問題要及早處理，避免影響輸出顯示
 
 ## 環境變數
 ```bash
